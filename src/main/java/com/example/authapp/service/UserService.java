@@ -57,7 +57,7 @@ public class UserService implements UserDetailsService {
         return false;
     }
 
-    public PasswordEncoder passwordEncoder() {
+    public PasswordEncoder getPasswordEncoder() {
         return passwordEncoder;
     }
 }

@@ -47,7 +47,7 @@ public class AuthController {
 
             User user = (User) authentication.getPrincipal();
 
-            return ResponseEntity.ok(new JwtResponse(jwt, user.getId(), user.getUsername(), user.getEmail()));
+             return ResponseEntity.ok(new JwtResponse(jwt, user.getId(), user.getUsername(), user.getEmail()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: Invalid username or password!");
         }

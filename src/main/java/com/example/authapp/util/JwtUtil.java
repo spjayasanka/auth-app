@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,13 +17,14 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret:mySecretKey}")
+    @Value("${jwt.secret:mySecretKeyForAuthApp2025MySecretKeyForAuthApp2025}")
     private String SECRET_KEY;
 
     @Value("${jwt.expiration:86400}")
     private int JWT_EXPIRATION;
 
-    private Key getSignKey() {
+    private SecretKey getSignKey() {
+        // Create a secure key for HS256 algorithm (at least 256 bits)
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
