@@ -3,16 +3,31 @@ package com.example.authapp.service;
 import com.example.authapp.model.User;
 import com.example.authapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+        return user;
+    }
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -36,6 +51,13 @@ public class UserService {
 
     public boolean validateUser(String username, String password) {
         Optional<User> user = findByUsername(username);
-        return user.isPresent() && user.get().getPassword().equals(password);
+        if (user.isPresent()) {
+            return passwordEncoder.matches(password, user.get().getPassword());
+        }
+        return false;
+    }
+
+    public PasswordEncoder passwordEncoder() {
+        return passwordEncoder;
     }
 }
